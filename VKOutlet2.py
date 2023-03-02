@@ -83,7 +83,6 @@ def new_webhook(embeds):
     webhook.execute()
 
 def send_webhooks(embeds):
-    log('CLEAR')
     log('Sending webhook messages... 0 out of '+str(len(embeds)))
     wsent = 0
     embedlist = []
@@ -101,6 +100,7 @@ def send_webhooks(embeds):
         log('Sending webhook messages... '+str(len(embeds))+' out of '+str(len(embeds)))
         new_webhook(embedlist)
         wsent+=len(embedlist)
+    log('CLEAR')
 
 def load_page(link):
     global pagenum
@@ -122,6 +122,7 @@ def update_progress():
 
 def cycle():
 
+    cycle_start = perf_counter()
     api_retrieve_start = perf_counter()
 
     newProducts = []
@@ -142,7 +143,7 @@ def cycle():
     global pagenum 
     pagenum = 0
 
-    log("Watching "+str(productCount)+" products.")
+    log("Running cycle for "+str(productCount)+" products.")
 
     log("Loading pages... 1 out of "+str(pages))
 
@@ -269,8 +270,10 @@ def cycle():
             webhook_start = perf_counter()
             send_webhooks(webhookMessages)
             webhook_stop = perf_counter()   
-            log('CLEAR')
             log("Sent webhook messages in "+str(round(webhook_stop-webhook_start, 3))+" seconds.")
+
+    cycle_stop = perf_counter()
+    log("Completed cycle in "+str(round(cycle_stop-cycle_start,3))+" seconds.")
 
 passedtime = cooldown
 while True:
