@@ -14,11 +14,9 @@ cooldown = 120
 #threads to use for loading info from api
 maxthreads = 10
 
-outlet_api_url = "https://web-api.service.verkkokauppa.com/search?filter=category%3A25a&pageNo=0&pageSize=48&context=customer_returns_page"
+api_url = "https://web-api.service.verkkokauppa.com/search?pageNo=0&pageSize=48&sort=score%3Adesc&lang=fi&context=customer_returns_page"
 
-allproducts_url = "https://web-api.service.verkkokauppa.com/search?pageNo=0&pageSize=48&sort=score%3Adesc&lang=fi&context=customer_returns_page"
-
-webhook_url = "https://discord.com/api/webhooks/1079729392059678740/Sg6ldIaBSNvqHo3Baku3lqvfTlr-orTlvk0Wa3s3gIqGVI-UVO95nhxnz7fqKWgoaABi"
+webhook_url = ""
 
 verkkokauppa_logo = "https://pbs.twimg.com/profile_images/1145562519039283200/pfRACtCr_400x400.png"
 
@@ -157,7 +155,7 @@ def cycle():
     addedBack = []
 
     try:
-        response = requests.get(allproducts_url, timeout=10)
+        response = requests.get(api_url, timeout=10)
     except:
         log('ERROR: NO INTERNET CONNECTION')
         return
@@ -186,7 +184,7 @@ def cycle():
     log("Loading pages... 1 out of "+str(pages))
 
     for pagenumber in range(1, pages): 
-        pageLinks.append(allproducts_url.replace("pageNo=0", "pageNo="+str(pagenumber)))
+        pageLinks.append(api_url.replace("pageNo=0", "pageNo="+str(pagenumber)))
         
     with ThreadPoolExecutor(max_workers=maxthreads) as executor:
         t = threading.Thread(target=update_progress)
